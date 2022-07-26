@@ -24,13 +24,8 @@ const newRead = document.getElementById("read");
 const submitBtn = document.getElementById("submit");
 const cancelBtn = document.getElementById("cancel");
 
-//event listeners for the btn
-addBtn.addEventListener("click", displayForm);
-submitBtn.addEventListener("click", newBook);
-cancelBtn.addEventListener("click", cancel);
-
 //event handlers
-function displayForm() {
+function displayForm(e) {
   newBookForm.style.display = "flex";
 }
 
@@ -92,7 +87,7 @@ function updateLibrary(id, obj) {
     const readChild = document.createElement("input");
     readChild.setAttribute("type", "checkbox");
     readChild.setAttribute("class", "has--read");
-    readChild.setAttribute("id", id);
+    readChild.setAttribute("id", `has--read--${id}`);
 
     readChild.checked = obj.hasRead;
     hasRead.appendChild(readChild);
@@ -102,11 +97,24 @@ function updateLibrary(id, obj) {
     libBook.appendChild(hasRead);
     libBook.appendChild(del);
     librarySpace.appendChild(libBook);
+    //add event listeners to the elements to avoid doing it later
     readChild.addEventListener("change", changeHasRead);
+    del.addEventListener("click", delBook);
   }
 }
+
+function delBook(e) {
+  const parent = e.target.parentElement;
+  librarySpace.removeChild(parent);
+  let parentId = parent.getAttribute("id");
+  parentId = parseInt(parentId.replace("book", ""));
+
+  myLibrary.splice(parentId, 1);
+}
+
 function changeHasRead(e) {
   let id = e.target.id;
+  id = id.replace("has--read--", "");
   if (this.checked) {
     myLibrary[id].hasRead = true;
   } else {
@@ -115,3 +123,8 @@ function changeHasRead(e) {
 }
 
 addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295);
+
+//event listeners for the btn
+addBtn.addEventListener("click", displayForm);
+submitBtn.addEventListener("click", newBook);
+cancelBtn.addEventListener("click", cancel);
