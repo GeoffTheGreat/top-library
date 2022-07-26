@@ -15,6 +15,9 @@ const header = document.getElementsByClassName("header");
 const librarySpace = document.querySelector(".content");
 const addBtn = document.getElementById("add");
 const newBookForm = document.getElementById("new--book");
+const totalBooks = document.getElementById("total");
+const amountRead = document.getElementById("amount--read");
+const unreadAmount = document.getElementById("not--read");
 
 //dom elements of the new book form
 const newTitle = document.getElementById("title");
@@ -36,12 +39,12 @@ function newBook() {
   let hasRead = newRead.checked;
   if (title !== "" && author !== "" && pages > 0) {
     addBookToLibrary(title, author, pages, hasRead);
-    newBookForm.style.display = "none";
+    cancel();
   } else {
     alert("fields cant be empty");
   }
 }
-
+//clear the new book form
 function cancel() {
   newTitle.value = "";
   newAuthor.value = "";
@@ -61,7 +64,7 @@ function addBookToLibrary(title, author, pages, hasRead) {
   }
 }
 
-//general functions
+//update the library content
 function updateLibrary(id, obj) {
   if (document.getElementById(`book${id}`) === null) {
     const libBook = document.createElement("div");
@@ -101,15 +104,24 @@ function updateLibrary(id, obj) {
     readChild.addEventListener("change", changeHasRead);
     del.addEventListener("click", delBook);
   }
+  amountOfBooks();
+}
+function amountOfBooks() {
+  let booksRead = myLibrary.filter((book) => book.hasRead === true);
+  totalBooks.textContent = myLibrary.length;
+
+  amountRead.textContent = booksRead.length;
+  unreadAmount.textContent = myLibrary.length - booksRead.length;
 }
 
+//remove a book from the library
 function delBook(e) {
   const parent = e.target.parentElement;
   librarySpace.removeChild(parent);
   let parentId = parent.getAttribute("id");
   parentId = parseInt(parentId.replace("book", ""));
-
   myLibrary.splice(parentId, 1);
+  amountOfBooks();
 }
 
 function changeHasRead(e) {
@@ -120,6 +132,7 @@ function changeHasRead(e) {
   } else {
     myLibrary[id].hasRead = false;
   }
+  amountOfBooks();
 }
 
 addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295);
