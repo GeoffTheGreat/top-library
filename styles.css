@@ -1,0 +1,72 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.header {
+  padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.content--container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 20px);
+}
+.content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 200px));
+  gap: 5px;
+  padding: 5px;
+}
+#add {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px 10px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: rgb(0, 117, 252);
+  border-radius: 100%;
+  font-weight: bolder;
+}
+.add--book {
+  align-self: flex-end;
+  bottom: 0;
+}
+#new--book {
+  display: none;
+  position: absolute;
+  top: 0;
+
+  width: 100vw;
+  height: 100vh;
+  align-content: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+#new--book__form {
+  padding: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.form--element {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.checkbox {
+  flex-direction: row;
+}
+.book--card {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid gray;
+  box-shadow: 2px 2px 2px black;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
