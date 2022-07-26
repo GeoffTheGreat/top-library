@@ -11,6 +11,7 @@
 }
 .books--in--library {
   border: 1px solid black;
+  background-color: aliceblue;
   padding: 5px;
   border-radius: 5px;
   box-shadow: 1px 1px 1px black;
