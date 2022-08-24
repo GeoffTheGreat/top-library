@@ -1,4 +1,36 @@
-let myLibrary = [];
+let myLibrary = getLocalLibrary();
+
+function getLocalLibrary() {
+  if (localStorage.getItem("library") != null) {
+    return JSON.parse(localStorage.getItem("library"));
+  }
+  return [];
+}
+
+function updateLocalLibrary(libraryArray) {
+  localStorage.setItem("library", JSON.stringify(libraryArray));
+}
+
+function doesBookExist(libraryArr, book) {
+  console.log(libraryArr);
+  let bookExist = false;
+  if (libraryArr.length > 0) {
+    libraryArr.forEach((item) => {
+      console.log(item);
+      if (
+        item.title.trim() === book.title.trim() &&
+        item.author.trim() === book.author.trim()
+      ) {
+        console.log("book exist");
+        bookExist = true;
+      }
+    });
+  }
+  if (bookExist) {
+    document.getElementById("book-exists").textContent = "Book Already Exists";
+  }
+  return bookExist;
+}
 
 //object constructor
 function Books(title, author, pages) {
@@ -31,6 +63,12 @@ const cancelBtn = document.getElementById("cancel");
 function displayForm(e) {
   newBookForm.style.display = "flex";
 }
+if (myLibrary.length !== 0) {
+  for (let i = 0; i < myLibrary.length; i++) {
+    const element = myLibrary[i];
+    updateLibrary(i, element);
+  }
+}
 
 function newBook() {
   let book = {
@@ -51,8 +89,10 @@ function newBook() {
   book.hasRead = newRead.checked;
 
   if (book.title !== "" && book.author !== "" && book.pages > 0) {
-    addBookToLibrary(book.title, book.author, book.pages, book.hasRead);
-    cancel();
+    if (doesBookExist(myLibrary, book) === false) {
+      addBookToLibrary(book.title, book.author, book.pages, book.hasRead);
+      cancel();
+    }
   }
 }
 
@@ -77,6 +117,7 @@ function cancel() {
   document
     .querySelectorAll(".error-message")
     .forEach((error) => (error.textContent = ""));
+  document.getElementById("book-exists").textContent = "";
 }
 
 //adds book to library
@@ -84,6 +125,7 @@ function addBookToLibrary(title, author, pages, hasRead) {
   const book = new Books(title, author, pages);
   book.hasRead = hasRead;
   myLibrary.push(book);
+  updateLocalLibrary(myLibrary);
   for (let i = 0; i < myLibrary.length; i++) {
     const element = myLibrary[i];
     updateLibrary(i, element);
@@ -147,6 +189,7 @@ function delBook(e) {
   let parentId = parent.getAttribute("id");
   parentId = parseInt(parentId.replace("book", ""));
   myLibrary.splice(parentId, 1);
+  updateLocalLibrary(myLibrary);
   amountOfBooks();
 }
 
@@ -160,8 +203,6 @@ function changeHasRead(e) {
   }
   amountOfBooks();
 }
-
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295);
 
 //event listeners for the btn
 addBtn.addEventListener("click", displayForm);
