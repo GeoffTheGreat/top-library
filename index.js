@@ -33,17 +33,40 @@ function displayForm(e) {
 }
 
 function newBook() {
-  let title = newTitle.value;
-  let author = newAuthor.value;
-  let pages = newPages.value;
-  let hasRead = newRead.checked;
-  if (title !== "" && author !== "" && pages > 0) {
-    addBookToLibrary(title, author, pages, hasRead);
+  let book = {
+    title: "",
+    author: "",
+    pages: "",
+    hasRead: false,
+  };
+  if (isValid(newTitle)) {
+    book.title = newTitle.value;
+  }
+  if (isValid(newAuthor)) {
+    book.author = newAuthor.value;
+  }
+  if (isValid(newPages)) {
+    book.pages = newPages.value;
+  }
+  book.hasRead = newRead.checked;
+
+  if (book.title !== "" && book.author !== "" && book.pages > 0) {
+    addBookToLibrary(book.title, book.author, book.pages, book.hasRead);
     cancel();
-  } else {
-    alert("fields cant be empty");
   }
 }
+
+function isValid(elem) {
+  if (!elem.checkValidity()) {
+    document.getElementById(`${elem.id}-error`).textContent =
+      elem.validationMessage;
+    return false;
+  }
+  document.getElementById(`${elem.id}-error`).textContent = "";
+
+  return true;
+}
+
 //clear the new book form
 function cancel() {
   newTitle.value = "";
@@ -51,6 +74,9 @@ function cancel() {
   newPages.value = "";
   newRead.checked = false;
   newBookForm.style.display = "none";
+  document
+    .querySelectorAll(".error-message")
+    .forEach((error) => (error.textContent = ""));
 }
 
 //adds book to library

@@ -78,3 +78,6 @@
   flex-direction: column;
   gap: 5px;
 }
+.error-message {
+  color: red;
+}
